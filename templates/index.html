@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <style>
+        /* Body Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4b6cb7, #182848); /* Blue Gradient */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container */
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 20px 40px;
+            width: 80%;
+            max-width: 900px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        /* Heading */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4b6cb7;
+            font-size: 2rem;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 25px;
+        }
+
+        /* Input Groups */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4b6cb7;
+            box-shadow: 0 0 8px rgba(75, 108, 183, 0.3);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            grid-column: span 2;
+            padding: 12px 20px;
+            border: none;
+            background-color: #4b6cb7;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #182848;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Modal Content */
+        .modal {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal h4 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #4b6cb7;
+        }
+
+        /* Close Button */
+        .modal .close-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #4b6cb7;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .modal .close-btn:hover {
+            background-color: #182848;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-btn {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Heart Disease Prediction Form</h1>
+        <form action="/predict" method="POST">
+            <div class="form-grid">
+                <!-- Input Fields -->
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" required>
+                </div>
+                <div class="form-group">
+                    <label for="sex">Sex (1=Male, 0=Female):</label>
+                    <input type="number" id="sex" name="sex" required>
+                </div>
+                <div class="form-group">
+                    <label for="cp">Chest Pain Type (0-3):</label>
+                    <input type="number" id="cp" name="cp" required>
+                </div>
+                <div class="form-group">
+                    <label for="trestbps">Resting Blood Pressure:</label>
+                    <input type="number" id="trestbps" name="trestbps" required>
+                </div>
+                <div class="form-group">
+                    <label for="chol">Serum Cholesterol:</label>
+                    <input type="number" id="chol" name="chol" required>
+                </div>
+                <div class="form-group">
+                    <label for="fbs">Fasting Blood Sugar (1=True, 0=False):</label>
+                    <input type="number" id="fbs" name="fbs" required>
+                </div>
+                <div class="form-group">
+                    <label for="restecg">Resting ECG Results (0-2):</label>
+                    <input type="number" id="restecg" name="restecg" required>
+                </div>
+                <div class="form-group">
+                    <label for="thalach">Max Heart Rate:</label>
+                    <input type="number" id="thalach" name="thalach" required>
+                </div>
+                <div class="form-group">
+                    <label for="exang">Exercise Induced Angina (1=Yes, 0=No):</label>
+                    <input type="number" id="exang" name="exang" required>
+                </div>
+                <div class="form-group">
+                    <label for="oldpeak">ST Depression:</label>
+                    <input type="number" step="0.1" id="oldpeak" name="oldpeak" required>
+                </div>
+                <div class="form-group">
+                    <label for="slope">Slope (0-2):</label>
+                    <input type="number" id="slope" name="slope" required>
+                </div>
+                <div class="form-group">
+                    <label for="ca">Major Vessels (0-4):</label>
+                    <input type="number" id="ca" name="ca" required>
+                </div>
+                <div class="form-group">
+                    <label for="thal">Thalassemia (0=Normal, 1=Fixed, 2=Reversible):</label>
+                    <input type="number" id="thal" name="thal" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Predict</button>
+            </div>
+        </form>
+    </div>
+
+     <!-- Modal -->
+     <div class="overlay" id="overlay"></div>
+     <div class="modal" id="resultModal">
+         <h4>Prediction Result</h4>
+         <p id="resultText"></p>
+         <button class="modal-close" id="closeModal">Close</button>
+     </div>
+ 
+     <script>
+         // Get references to modal and overlay
+         const resultModal = document.getElementById("resultModal");
+         const overlay = document.getElementById("overlay");
+         const resultText = document.getElementById("resultText");
+         const closeModal = document.getElementById("closeModal");
+ 
+         // Show modal with the prediction result
+         const showModal = (text) => {
+             resultText.textContent = text;
+             overlay.style.display = "block";
+             resultModal.style.display = "block";
+         };
+ 
+         // Close modal
+         closeModal.addEventListener("click", () => {
+             overlay.style.display = "none";
+             resultModal.style.display = "none";
+         });
+ 
+         // Example: Use server-side template rendering to pass the prediction result
+         const predictionText = "{{ prediction_text | safe }}";
+         if (predictionText) {
+             showModal(predictionText);
+         }
+     </script>
+</body>
+
+</html>
